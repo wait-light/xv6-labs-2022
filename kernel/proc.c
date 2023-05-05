@@ -683,3 +683,17 @@ procdump(void)
     printf("\n");
   }
 }
+
+// traverse proc array
+// get non-UNUSED proc
+uint64
+freeprocs(void){
+  uint64 processesamount = 0;
+  struct proc *p;
+  for(p = proc; p < &proc[NPROC]; p++){
+    if(p->state == UNUSED)
+      continue;
+    processesamount++;
+  }
+  return processesamount;
+}
