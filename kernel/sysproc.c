@@ -67,6 +67,7 @@ sys_sleep(void)
     sleep(&ticks, &tickslock);
   }
   release(&tickslock);
+  backtrace();
   return 0;
 }
 
@@ -91,3 +92,35 @@ sys_uptime(void)
   release(&tickslock);
   return xticks;
 }
+
+
+// set a hander execute after ticks have occurred
+uint64
+sys_sigalarm(void)
+{
+  uint64 ticks, handler;
+  argint(0,(int*)&ticks);
+  argaddr(0,&handler);
+  if (ticks < 0 || handler < 0)
+  {
+    panic("unsupport ticks");
+  }
+  struct proc* proc = myproc();
+  proc->handler = handler;
+  proc->interval = ticks;
+  return 0;
+}
+
+uint64
+sys_sigreturn(void)
+{
+  return 0;
+}
+
+uint64
+sys_backtrace(void)
+{
+  backtrace();
+  return 0;
+}
+
